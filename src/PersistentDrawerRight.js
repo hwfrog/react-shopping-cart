@@ -107,35 +107,37 @@ class PersistentDrawerRight extends React.Component {
       const buttons = [];
       Object.keys(this.props.selected[key]).map((size,i) =>{
         buttons.push(
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={() => this.props.delSize(key, size)}>
           {size} {this.props.selected[key][size]}
           <DeleteIcon/>
         </Button> )       
       });
-      items.push(
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar src={'https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/' + product.sku.toString() +'_1.jpg'} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={product.title}
-              secondary={
-                <React.Fragment>
-                  <Typography component="span" className={classes.inline} color="textPrimary">
-                    {product.currencyFormat+product.price}
-                  </Typography>
-                  {buttons}
-                </React.Fragment>
-              }
-            />
-          <ListItemSecondaryAction>
-            <IconButton aria-label="Delete" onClick={() => this.props.del(key)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-          </ListItem>
-        )
-    } )
+      if (buttons.length != 0){
+        items.push(
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar src={'https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/' + product.sku.toString() +'_1.jpg'} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={product.title}
+                secondary={
+                  <React.Fragment>
+                    <Typography component="span" className={classes.inline} color="textPrimary">
+                      {product.currencyFormat+product.price}
+                    </Typography>
+                    {buttons}
+                  </React.Fragment>
+                }
+              />
+            <ListItemSecondaryAction>
+              <IconButton aria-label="Delete" onClick={() => this.props.del(key)}>
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+            </ListItem>
+          );
+      }
+    })
 
     return (
       <div className={classes.root}>

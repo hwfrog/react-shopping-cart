@@ -23,7 +23,7 @@
   height: 600px;
   width:280px;
   display: block;
-  margin: 60px auto;
+  margin: 30px auto;
   box-shadow: 10px 5px 40px 20px darken(#341cac, 5%);
   transition: .25s;
   

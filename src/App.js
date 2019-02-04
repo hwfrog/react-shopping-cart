@@ -11,6 +11,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import PersistentDrawerRight from './PersistentDrawerRight.js';
 import ProductTable from './ProductTable.js';
+import ChipArray from './ChipArray.js';
 
 
 class ItemEntry extends React.Component{
@@ -33,7 +34,6 @@ class ItemEntry extends React.Component{
 class ShoppingCartTable extends React.Component{
   render(){
     const items = [];
-    console.log(this.props.selected);
     if(this.props.selected){
       Object.keys(this.props.selected).forEach((product)=>{
         items.push(<ItemEntry key={product.key} product={product} />);
@@ -90,9 +90,31 @@ class App extends Component {
     super(props);
     this.state = {
       data:null,
-      selected:{}
+      selected:{},
+      chipData: {
+        'XS': false,
+        'S': false,
+        'M': false,
+        'ML': false,
+        'L': false,
+        'XL': false,
+        'XXL' : false
+      }
     };
     // this.addToCart = this.addToCart.bind(this);
+  }
+
+  applyFilter = () => {
+    const products = this.state.data.filter( product =>
+      product.availableSizes.some( size => this.state.chipData[size])
+    );
+    return products.length>0 ? products : this.state.data;
+  }
+
+  onClickChip = id => {
+    let statecopy = Object.assign({}, this.state);
+    statecopy.chipData[id] = !statecopy.chipData[id];
+    this.setState(statecopy);
   }
 
   addToCart = (id, size) => {
@@ -112,6 +134,16 @@ class App extends Component {
     this.setState(statecopy);
   }
 
+  deleteSize = (id, size) => {
+    if (id in this.state.selected){
+      if (size in this.state.selected[id]){
+        let statecopy = Object.assign({}, this.state);
+        delete statecopy.selected[id][size];
+        this.setState(statecopy);
+      }
+    }
+  }  
+
   deleteInCart = id => {
     if (id in this.state.selected){
       let statecopy = Object.assign({}, this.state);
@@ -121,12 +153,15 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.selected);
     if (this.state.data){
+      const dt = this.applyFilter();
       return (
         <div>
-        <PersistentDrawerRight products={this.state.data} selected={this.state.selected} del={this.deleteInCart}/>
-        <ProductTable products={this.state.data} addToCart={this.addToCart}/>
+        <PersistentDrawerRight products={this.state.data} selected={this.state.selected} del={this.deleteInCart} delSize={this.deleteSize}/>
+        <ChipArray chipData={this.state.chipData} onClickChip={this.onClickChip}/>
+        <div style={{margin: '80px auto'}}>
+        <ProductTable products={dt} addToCart={this.addToCart}/>
+        </div>
         </div>
       );
     }
