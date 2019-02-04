@@ -23,6 +23,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
+import firebase from "firebase";
 
 const drawerWidth = 400;
 
@@ -157,9 +158,10 @@ class PersistentDrawerRight extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
+            <Typography variant="h6" color="inherit" noWrap style={{flex: 1}}>
               Shopping Cart
             </Typography>
+            <Button color="inherit" onClick={()=>firebase.auth().signOut()} >Logout</Button>
           </Toolbar>
         </AppBar>
         <Drawer

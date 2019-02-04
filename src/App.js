@@ -8,12 +8,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import firebase from "firebase";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 import PersistentDrawerRight from './PersistentDrawerRight.js';
 import ProductTable from './ProductTable.js';
 import ChipArray from './ChipArray.js';
 
-
+firebase.initializeApp({
+  apiKey: "AIzaSyD2bQMx2S-es97VKXuIUyVSUrKo3HdhqJw",
+  authDomain: "react-shopping-cart-9615f.firebaseapp.com"
+})
 class ItemEntry extends React.Component{
   render(){
     const product = this.props.product;
@@ -86,9 +91,20 @@ class ShoppingCart extends React.Component {
 
 
 class App extends Component {
+  uiConfig = {
+    signInFlow: "popup",
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      signInSuccess: () => false
+    }
+  }
   constructor(props) {
     super(props);
     this.state = {
+      isSignedIn: false,
       data:null,
       selected:{},
       chipData: {
@@ -153,23 +169,34 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.data){
-      const dt = this.applyFilter();
-      return (
-        <div>
-        <PersistentDrawerRight products={this.state.data} selected={this.state.selected} del={this.deleteInCart} delSize={this.deleteSize}/>
-        <ChipArray chipData={this.state.chipData} onClickChip={this.onClickChip}/>
-        <div style={{margin: '80px auto'}}>
-        <ProductTable products={dt} addToCart={this.addToCart}/>
-        </div>
-        </div>
-      );
+    if (this.state.isSignedIn){
+      if (this.state.data){
+        const dt = this.applyFilter();
+        return (
+          <div>
+          <PersistentDrawerRight products={this.state.data} selected={this.state.selected} del={this.deleteInCart} delSize={this.deleteSize}/>
+          <ChipArray chipData={this.state.chipData} onClickChip={this.onClickChip}/>
+          <div style={{margin: '80px auto'}}>
+          <ProductTable products={dt} addToCart={this.addToCart}/>
+          </div>
+          </div>
+        );
+      }
+      else{
+        return <p>Loading ...</p>;
+      }
     }
     else{
-      return <p>Loading ...</p>;
+      return <StyledFirebaseAuth uiConfig={this.uiConfig}
+                          firebaseAuth={firebase.auth()} />
     }
   }
+
   componentDidMount() {
+
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({isSignedIn: !!user})      
+    })
     import('./products.json').then(json => {
       this.setState({ data : json.products });
     })
