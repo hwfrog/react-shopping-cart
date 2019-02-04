@@ -95,17 +95,21 @@ class App extends Component {
     // this.addToCart = this.addToCart.bind(this);
   }
 
-  addToCart = id => {
+  addToCart = (id, size) => {
+    let statecopy = Object.assign({}, this.state);
     if (id in this.state.selected){
-      let statecopy = Object.assign({}, this.state);
-      statecopy.selected[id] += 1;
-      this.setState(statecopy);
+      if (size in statecopy.selected[id]){
+        statecopy.selected[id][size] += 1;
+      }
+      else{
+        statecopy.selected[id][size] = 1;
+      }
     }
     else{
-      let statecopy = Object.assign({}, this.state);
-      statecopy.selected[id] = 1;
-      this.setState(statecopy);
+      statecopy.selected[id] = {};
+      statecopy.selected[id][size] = 1;
     }
+    this.setState(statecopy);
   }
 
   deleteInCart = id => {

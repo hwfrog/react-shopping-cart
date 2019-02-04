@@ -22,6 +22,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
 
 const drawerWidth = 400;
 
@@ -103,7 +104,14 @@ class PersistentDrawerRight extends React.Component {
 
     Object.keys(this.props.selected).map((key, index) => {
       const product = this.props.products.find(p => p.id==key);
-      console.log(product);
+      const buttons = [];
+      Object.keys(this.props.selected[key]).map((size,i) =>{
+        buttons.push(
+        <Button variant="contained" color="secondary">
+          {size} {this.props.selected[key][size]}
+          <DeleteIcon/>
+        </Button> )       
+      });
       items.push(
           <ListItem>
             <ListItemAvatar>
@@ -116,7 +124,7 @@ class PersistentDrawerRight extends React.Component {
                   <Typography component="span" className={classes.inline} color="textPrimary">
                     {product.currencyFormat+product.price}
                   </Typography>
-                  {this.props.selected[key]}
+                  {buttons}
                 </React.Fragment>
               }
             />

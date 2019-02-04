@@ -53,6 +53,7 @@
 }
 
 .card-body {
+  height: 350px;
   font-size: 8pt;
   padding: 15px;
   background-color:#fff;
@@ -69,6 +70,11 @@
   padding-bottom: 40px;
   font-size: 13px;
   line-height: 1.8;
+}
+
+.size-button {
+  size: "small";
+  padding: 10px;
 }
 
 .button-primary {

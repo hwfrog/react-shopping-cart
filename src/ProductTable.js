@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import './App.css';
+
 class CardHeader extends React.Component {
   render() {
     const { image } = this.props;
@@ -13,32 +16,32 @@ class CardHeader extends React.Component {
   }
 }
 
-class Button extends React.Component {
-  render() {
-    // console.log(this.props);
-    return (
-      <button className="button button-primary"
-              onClick={()=>this.props.addToCart(this.props.product.id)}>
-        Add to cart
-      </button>
-    )
-  }
-}
 
 class CardBody extends React.Component {
-  render() {
-    return (
-      <div className="card-body">
-        
-        <h2>{this.props.title}</h2>
-        
-        <p className="body-content">{this.props.price}</p>
-        <p className="body-content">{this.props.mprice}</p>
-        <Button addToCart={this.props.addToCart}
-                product={this.props.product}/>
-      </div>
-    )
-  }
+  	render() {
+  		const buttons = []
+  		this.props.product.availableSizes.map(size => 
+  			buttons.push(
+		        <Button containerViewStyle={{width: '10px'}}
+		        		color="default"
+		       			variant="contained"
+		        		onClick={()=>this.props.addToCart(this.props.product.id, size)}>
+		        	{size}
+		    	</Button>
+  			)
+  		)
+	    return (
+	      <div className="card-body">
+	        
+	        <h2>{this.props.title}</h2>
+	        
+	        <p className="body-content">{this.props.price}</p>
+	        <p className="body-content">{this.props.mprice}</p>
+	        <p style={{color: 'grey'}}>Add to cart by size:</p>
+	        {buttons}
+	      </div>
+	    )
+	}
 }
 
 class ItemTable extends React.Component {
